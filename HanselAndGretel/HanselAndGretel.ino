@@ -1,21 +1,24 @@
 /* AET319M&T Project 2: Hansel and Gretel
     Gretel pushes witch into oven > gets key > saves Hansel
 */
-#include <Servos.h>;
+#include <Servo.h>
 
 //inst servos (2)
 Servo ovenServo; 
 Servo cageServo;
 
-//designate pin numbers of inputs
-const int witchPin = 3;
-const int cagePin = 4;
-const int hanselPin = 5;
+//designate pin numbers. switch = I, pin = O
+const int witchSwitch = 1;
+const int witchPin = 2;
 
-//designate pin numbers of outputs
-int ledPin = 6;
-int ovenPiezoPin = 7;
-int hanselPiezoPin = 8;
+const int cageSwitch = 3;
+const int cagePin = 4;
+
+const int hanselSwitch = 5;
+
+int ledPin = 7;
+int ovenPiezoPin = 8;
+int hanselPiezoPin = 9;
 
 //keep track of states. start all off
 int witchState = 0;
@@ -24,11 +27,12 @@ int hanselState = 0;
 
 void setup() {
   //designate I/O
-  pinMode(witchPin, INPUT);
-  pinMode(cagePin, INPUT);
-  pinMode(hanselPin, INPUT);
+  pinMode(witchSwitch, INPUT);
+  pinMode(cageSwitch, INPUT);
+  pinMode(hanselSwitch, INPUT);
+  
   ovenServo.attach(witchPin);
-  cageServo.attach(cageDoorPin);
+  cageServo.attach(cagePin);
 
   //inital states
   ovenServo.write(0);
@@ -54,7 +58,7 @@ void ovenAudio() {
 //witch/oven interaction
 //NEED TO INCORPORATE SWITCH STATE CHECK CODE
 void ovenBehavior() {
-  witchState = digitalRead(witchPin); //read if HIGH/LOW
+  witchState = digitalRead(witchSwitch); //read if HIGH/LOW
 
   //witch in oven, switch is ON
   if (witchState == HIGH) {
@@ -67,29 +71,30 @@ void ovenBehavior() {
 
 //key/cage/hansel interaction
 void cageBehavior() {
-  cageState = digitalRead(cagePin);
-  hanselState = digitalRead(hanselPin);
+  cageState = digitalRead(cageSwitch);
+  hanselState = digitalRead(hanselSwitch);
 
   //key in cahe keyhole
   if (cageState == HIGH) {
     //GET AUDIO FOR CAGE OPENING
     digitalWrite(hanselPiezoPin, HIGH);
-    hanselAudio(); //REVISIT
-
     cageServo.write(90); //open cage door
   }
-
-  //hansel still in cage, switch is on
+  
   if (hanselState == HIGH) {
-    //switch is on, add hansel as a switch
-    //AUDIO OF HELP ME GRETEL
+    //hansel still in cage, hanselSwitch is on
+    
     digitalWrite(hanselPiezoPin, HIGH);
+    //AUDIO OF HELP ME GRETEL
   } else {
+    //hansel out of cage, hanselSwitch is off
+    
     digitalWrite(hanselPiezoPin, LOW);
   }
 
   //must put witch into oven AND take hansel out of cage to win
   if (hanselState == LOW && witchState == HIGH) {
+    digitalWrite(hanselPiezoPin, HIGH);
     //AUDIO OF HOORAY
   }
 }
