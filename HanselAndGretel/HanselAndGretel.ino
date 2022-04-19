@@ -55,7 +55,6 @@ void loop() {
 }
 
 //witch/oven interaction
-//INCORPORATE STATE CHANGE DETECTION CODE?
 void ovenBehavior() {
   witchState = digitalRead(witchSwitch); //read if HIGH/LOW, assign
   
@@ -63,15 +62,18 @@ void ovenBehavior() {
   if (witchState == HIGH) {
     ovenServo.write(180); //spin witch 180, show burnt side with key
     digitalWrite(ledPin, HIGH);
+    Serial.write("HIGH" );
+    
 //    digitalWrite(ovenPiezoPin, HIGH);
-
     //audio of burning, witch screaming
   } else {
+    ovenServo.write(0);
     digitalWrite(ledPin, LOW);
+    Serial.write("LOW ");
   }
 }
 
-//key/cage/hansel interaction
+//key/cage/hansel interaction: stretch
 //void cageBehavior() {
 //  cageState = digitalRead(cageSwitch);
 //  hanselState = digitalRead(hanselSwitch);
