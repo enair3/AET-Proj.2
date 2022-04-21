@@ -11,28 +11,23 @@ Servo cageServo;
 //CONSTANTS. designate pin numbers. switch = I, pin = O
 const int witchSwitch = 2;
 const int cageSwitch = 3;
-const int hanselSwitch = 5;
 
 const int witchServoPin = 10;
 const int cageServoPin = 4;
 const int ledPin = 7;
-const int ovenPiezoPin = 8;
-const int hanselPiezoPin = 9;
+const int piezoPin = 8;
 
 //VARIABLES. keep track of states
 int witchState = 0;
 int cageState = 0;
-int hanselState = 0;
 
 void setup() {
   //designate I/O
   pinMode(witchSwitch, INPUT);
   pinMode(cageSwitch, INPUT);
-  pinMode(hanselSwitch, INPUT);
 
   pinMode(ledPin, OUTPUT);
-  pinMode(ovenPiezoPin, OUTPUT);
-  pinMode(hanselPiezoPin, OUTPUT);
+  pinMode(piezoPin, OUTPUT);
 
   ovenServo.attach(witchServoPin);
   cageServo.attach(cageServoPin);
@@ -42,16 +37,15 @@ void setup() {
   cageServo.write(0);
 
   digitalWrite(ledPin, LOW);
-  digitalWrite(ovenPiezoPin, LOW);
-  digitalWrite(hanselPiezoPin, LOW);
+  digitalWrite(piezoPin, LOW);
 
   //debug
   Serial.begin(9600);
 }
 
 void loop() {
-  ovenBehavior();
-//  cageBehavior();
+//  ovenBehavior();
+  cageBehavior();
 }
 
 //witch/oven interaction
@@ -64,39 +58,30 @@ void ovenBehavior() {
     digitalWrite(ledPin, HIGH);
     Serial.write("HIGH" );
     
-//    digitalWrite(ovenPiezoPin, HIGH);
-    //audio of burning, witch screaming
+    tone(x,y,z);//audio of burning, witch screaming
+    digitalWrite(piezoPin, HIGH);
+    
   } else {
     ovenServo.write(0);
     digitalWrite(ledPin, LOW);
     Serial.write("LOW ");
+    digitalWrite(piezoPin, LOW);
   }
 }
 
 //key/cage/hansel interaction: stretch
-//void cageBehavior() {
-//  cageState = digitalRead(cageSwitch);
-//  hanselState = digitalRead(hanselSwitch);
-//
-//  //key in cahe keyhole
-//  if (cageState == HIGH) {
-//    //GET AUDIO FOR CAGE OPENING
-//    digitalWrite(hanselPiezoPin, HIGH);
-//    cageServo.write(90); //open cage door
-//  }
-//
-//  if (hanselState == HIGH) {
-//    //hansel still in cage, hanselSwitch is on
-//    digitalWrite(hanselPiezoPin, HIGH);
-//    //AUDIO OF HELP ME GRETEL
-//  } else {
-//    //hansel out of cage, hanselSwitch is off
-//    digitalWrite(hanselPiezoPin, LOW);
-//  }
-//
-//  //must put witch into oven AND take hansel out of cage to win
-//  if (hanselState == LOW && witchState == HIGH) {
-//    digitalWrite(hanselPiezoPin, HIGH);
-//    //AUDIO OF HOORAY
-//  }
-//}
+void cageBehavior() {
+  cageState = digitalRead(cageSwitch);
+
+  //key in cage keyhole AND witch in oven to win
+  if (cageState == HIGH && witchState == HIGH) {
+    digitalWrite(piezoPin, LOW); //turn off Hansel crying
+    cageServo.write(90); //open door
+    
+  } else { //no key, witch is out, still trapped
+    
+   tone(x,y,z); //Hansel crying
+   cageServo.write(0); //closed door
+  }
+
+}
