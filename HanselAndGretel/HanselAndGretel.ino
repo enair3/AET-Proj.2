@@ -3,6 +3,7 @@
 */
 
 #include <Servo.h>
+#include "pitches.h"
 
 //inst servos (2)
 Servo ovenServo;
@@ -34,7 +35,7 @@ void setup() {
 
   //inital states
   ovenServo.write(0);
-  cageServo.write(0);
+  cageServo.write(90);
 
   digitalWrite(ledPin, LOW);
   digitalWrite(piezoPin, LOW);
@@ -44,44 +45,40 @@ void setup() {
 }
 
 void loop() {
-//  ovenBehavior();
+  ovenBehavior();
   cageBehavior();
 }
 
 //witch/oven interaction
 void ovenBehavior() {
   witchState = digitalRead(witchSwitch); //read if HIGH/LOW, assign
-  
-  //witch in oven, switch is ON
-  if (witchState == HIGH) {
+
+  //witch in oven, witchWwitch is ON but cage not opened yet. stays burnt
+  if (witchState == HIGH && cageState == LOW) {
     ovenServo.write(180); //spin witch 180, show burnt side with key
     digitalWrite(ledPin, HIGH);
-    Serial.write("HIGH" );
-    
-    tone(x,y,z);//audio of burning, witch screaming
-    digitalWrite(piezoPin, HIGH);
-    
-  } else {
-    ovenServo.write(0);
-    digitalWrite(ledPin, LOW);
-    Serial.write("LOW ");
-    digitalWrite(piezoPin, LOW);
+    tone(8, 2000); //CHANGE TONE TO WITCH SOUNDS
   }
+  //without else component, have to reupload to arduino to reset witch
+  //  } else {
+  //    ovenServo.write(0);
+  //    digitalWrite(ledPin, LOW); //turn off witch sounds
+  //  }
 }
 
-//key/cage/hansel interaction: stretch
+//key/cage/hansel interaction
 void cageBehavior() {
   cageState = digitalRead(cageSwitch);
 
-  //key in cage keyhole AND witch in oven to win
+  //key in cage keyhole AND witch in oven to free hansel
   if (cageState == HIGH && witchState == HIGH) {
-    digitalWrite(piezoPin, LOW); //turn off Hansel crying
-    cageServo.write(90); //open door
-    
+    //  if (cageState == HIGH) {
+    noTone(8); //turn off Hansel crying
+    cageServo.write(0); //open door
+
   } else { //no key, witch is out, still trapped
-    
-   tone(x,y,z); //Hansel crying
-   cageServo.write(0); //closed door
+    tone(8, 200); //CHANGE TONE FOR CRYING
+    cageServo.write(90); //closed door
   }
 
 }
