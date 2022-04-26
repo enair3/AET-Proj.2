@@ -1,5 +1,6 @@
 /* AET319M&T Project 2: Hansel and Gretel
     Gretel pushes witch into oven > gets key > saves Hansel
+    arduino song credits to https://github.com/robsoncouto/arduino-songs
 */
 
 #include <Servo.h>
@@ -82,4 +83,22 @@ void cageBehavior() {
     tone(8, 200); //CHANGE TONE FOR CRYING
     cageServo.write(90); //closed door
   }
+}
+
+//arduino song functions
+//need to switch buzzer from source to piezoPin varName
+//format their code into here
+void witchTheme() {
+  //FIX into here and check in ovenBehavior()
+  //https://github.com/robsoncouto/arduino-songs/blob/master/doom/doom.ino
+}
+
+void hanselCrying() {
+  //FIX into here and check in cageBehavior()
+  //https://github.com/robsoncouto/arduino-songs/blob/master/bloodytears/bloodytears.ino
+}
+
+void victoryTheme() {
+  //FIX into here and check in cageBehavior()
+  //https://github.com/robsoncouto/arduino-songs/blob/master/nokia/nokia.ino
 }
