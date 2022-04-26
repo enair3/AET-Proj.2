@@ -58,8 +58,10 @@ void ovenBehavior() {
     ovenServo.write(180); //spin witch 180, show burnt side with key
     digitalWrite(ledPin, HIGH);
     tone(8, 2000); //CHANGE TONE TO WITCH SOUNDS
+    //might need inOven var (inst 0, dead 1) based on playtesting
+    //Q if players will close oven again after getting key...
   }
-  //without else component, have to reupload to arduino to reset witch
+  //without else component, have to reupload to arduino to reset ovenServo
   //  } else {
   //    ovenServo.write(0);
   //    digitalWrite(ledPin, LOW); //turn off witch sounds
@@ -80,5 +82,4 @@ void cageBehavior() {
     tone(8, 200); //CHANGE TONE FOR CRYING
     cageServo.write(90); //closed door
   }
-
 }
