@@ -88,6 +88,11 @@ void cageBehavior() {
 //arduino song functions
 //need to switch buzzer from source to piezoPin varName
 //format their code into here
+
+int tempo = 130;
+
+//int buzzer = 8; PIEZOPIN
+
 void witchTheme() {
   //FIX into here and check in ovenBehavior()
   //https://github.com/robsoncouto/arduino-songs/blob/master/doom/doom.ino
